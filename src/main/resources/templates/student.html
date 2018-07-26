@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+
+            $('#student-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('student-id');
+                var firstName = button.data('student-first-name');
+                var lastName = button.data('student-last-name');
+                var userName = button.data('student-username');
+                var email = button.data('student-email');
+                var title = button.data('modal-type');
+                var action = button.data('form-action');
+
+                $('#student-id').val(id);
+                $('#student-first-name').val(firstName);
+                $('#student-last-name').val(lastName);
+                $('#student-username').val(userName);
+                $('#student-email').val(email);
+                $('#span-title').text(title);
+                $('#form-student').attr('action',action);
+            });
+
+            $('#delete-student-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('student-id');
+                $('#delete-student-id').val(id);
+            });
+
+            $('#reset-student-password-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('student-id');
+                $('#reset-student-id').val(id);
+            });
+        });
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/new-student :: student-modal"/>
+<div th:replace="fragments/delete-student :: delete-student-modal"/>
+<div th:replace="fragments/reset-student-password :: reset-student-password-modal"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-student-id="0"
+            data-student-first-name=""
+            data-student-last-name=""
+            data-student-username=""
+            data-student-email=""
+            data-modal-type="New"
+            th:attr="data-form-action=@{/student/new}"
+            data-target="#student-modal" >New Student</button>
+
+    <div th:if="${students}" class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+            <th scope="col">ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">E-Mail</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            </thead>
+            <tbody>
+            <tr scope="row" th:each="student : ${students}">
+                <td class="col-md-1" th:text="${student.id}"></td>
+                <td class="col-md-2" th:text="${student.firstName}"></td>
+                <td class="col-md-2" th:text="${student.lastName}"></td>
+                <td class="col-md-2" th:text="${student.user.userName}"></td>
+                <td class="col-md-2" th:text="${student.user.email}"></td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                            th:attr="data-student-id=${student.id},
+                                data-student-first-name=${student.firstName},
+                                data-student-last-name=${student.lastName},
+                                data-student-username=${student.user.userName},
+                                data-student-email=${student.user.email},
+                                data-form-action=@{/student/edit}"
+                            data-modal-type="Edit"
+                            data-target="#student-modal">Edit</button>
+                </td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                            th:attr="data-student-id=${student.id}" data-target="#delete-student-modal">Delete</button>
+                </td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-info" data-toggle="modal"
+                            th:attr="data-student-id=${student.id}" data-target="#reset-student-password-modal">Reset Password</button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

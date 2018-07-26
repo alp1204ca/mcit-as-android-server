@@ -1,0 +1,74 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:fragment="header-css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+        <link rel="stylesheet" th:href="@{/css/main.css}" href="../../css/main.css" />
+        <link rel="stylesheet" th:href="@{/css/bootstrap-editable.css}" href="../../css/bootstrap-editable.css" />
+        <!--<link rel="stylesheet" th:href="@{/css/datepicker3.css}" href="../../css/datepicker3.css" />-->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+    </div>
+    <div th:fragment="header-js">
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.js"
+                integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script
+                src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+                integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+                crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <!--<script type="text/javascript" th:src="@{/js/lib/bootstrap-datepicker.js}"></script>-->
+
+    </div>
+</head>
+<body>
+<div th:fragment="header">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a sec:authorize="hasRole('ADMIN')" class="nav-link" th:href="@{/admin}">Home <span class="sr-only">(current)</span></a>
+                    <a sec:authorize="hasRole('PROFESSOR')" class="nav-link" th:href="@{/professor/dashboard}">Home <span class="sr-only">(current)</span></a>
+                    <a sec:authorize="hasRole('STUDENT')" class="nav-link" th:href="@{/student/dashboard}">Home <span class="sr-only">(current)</span></a>
+
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarRegistration" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Registration
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarRegistration">
+                        <a class="dropdown-item" th:href="@{/professor}">Professor</a>
+                        <a class="dropdown-item" th:href="@{/student}">Student</a>
+                        <a class="dropdown-item" th:href="@{/course}">Course</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarManagement" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Management
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarManagement">
+                        <a class="dropdown-item" th:href="@{/cs-assignment}">Course Assignment</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <span sec:authorize="isAuthenticated()">
+                Logged user: <span sec:authentication="name"></span> |
+                <a th:href="@{/logout}">Sign Out</a>
+            </span>
+            </form>
+        </div>
+    </nav>
+
+</div>
+
+</body>
+</html>

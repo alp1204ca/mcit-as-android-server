@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+
+
+            $('.course-report').click(function() {
+
+                var url = $(this).attr('data-url');
+                if (url) {
+                    window.open(url, '_blank');
+                }
+            });
+
+        });
+
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h1>Scheduled Courses</h1>
+            <div>
+                <table class="table table-hover" id="cps-table">
+                    <thead>
+                        <th scope="col">Course Id</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Professor Name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col"># of Students</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </thead>
+                    <tbody>
+                        <tr scope="row" th:each="course : ${courses}" class="clickable-row">
+                            <td class="col-md-1" th:text="${course.id}"></td>
+                            <td class="col-md-2" th:text="${course.name}"></td>
+                            <td class="col-md-2" th:if="${course.professor} != null" th:text="${course.professor.firstName + ' ' + course.professor.lastName}"></td>
+                            <td class="col-md-2" th:if="${course.professor} == null"></td>
+                            <td class="col-md-2" th:if="${course.startDate != null}" th:text="${#calendars.format(course.startDate,'MM/dd/yyyy')}"></td>
+                            <td class="col-md-2" th:if="${course.startDate == null}"></td>
+                            <td class="col-md-2" th:if="${course.endDate != null}" th:text="${#calendars.format(course.endDate,'MM/dd/yyyy')}"></td>
+                            <td class="col-md-2" th:if="${course.endDate == null}"></td>
+
+                            <td class="col-md-1" th:text="${#lists.size(course.courseStudents)}"></td>
+                            <td class="col-md-1">
+                                <a th:href="@{'/cs-assignment/' + ${course.id}}">See Students</a>
+                            </td>
+                            <td class="col-md-1">
+                                <a th:attr="data-url=@{/cs-assignment/pdf(id=${course.id})}" class="btn course-report btn-primary m-r-5 m-b-5" style="color: #ffffff;">Export to PDF</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

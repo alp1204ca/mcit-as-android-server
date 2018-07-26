@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="course-modal">
+    <div class="modal fade" id="course-modal" tabindex="-1" role="dialog" aria-labelledby="newCourse" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span id="span-title"></span> Course</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form  method="post" id="form-course">
+                        <div class="form-group">
+                            <div class='input-group' id='course-id-name'>
+                                <input type="hidden" name="id" id="course-id"/>
+                                <input placeholder="Course Name" required="true" autofocus="true" type="text"
+                                       class="form-control" id="course-name" name="name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class='input-group' id='course-professor'>
+                                <select class="form-control" name="professor.id" id="professorId">
+                                    <option
+                                            th:value="${p.id}"
+                                            th:each="p : ${professors}"
+                                            th:text="${p.firstName + ' '+ p.lastName}">professor's name</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <input id='course-start-date'
+                                   type='text' placeholder="Start Date" class="form-control" name="startDate"
+                                   autocomplete="off" onkeydown="return false" required="true"/>
+
+                        </div>
+
+                        <div class="form-group" >
+                            <input id='course-end-date'
+                                   type='text' placeholder="End Date" class="form-control" name="endDate"
+                                   autocomplete="off" onkeydown="return false" required="true"/>
+
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="$('#form-course').submit();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

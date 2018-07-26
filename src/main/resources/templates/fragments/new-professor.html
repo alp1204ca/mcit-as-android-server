@@ -1,0 +1,42 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="professor-modal">
+    <div class="modal fade" id="professor-modal" tabindex="-1" role="dialog" aria-labelledby="newProfessor" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span id="span-title"></span> Professor</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form  method="post" id="form-professor">
+                        <div class="form-group">
+                            <input type="hidden" name="id" id="professor-id"/>
+                            <input placeholder="First Name" required="true" autofocus="true" type="text"
+                                   class="form-control" id="professor-first-name" name="firstName" />
+                        </div>
+                        <div class="form-group">
+                            <input placeholder="Last Name" required="true" type="text"
+                                   class="form-control" id="professor-last-name" name="lastName" />
+                        </div>
+                        <div class="form-group">
+                            <input placeholder="Username" required="true" type="text"
+                                   class="form-control" id="professor-username" name="user.userName" />
+                        </div>
+                        <div class="form-group">
+                            <input placeholder="E-Mail" required="true" type="text"
+                                   class="form-control" id="professor-email" name="user.email" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="$('#form-professor').submit();">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+
+            $('#professor-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('professor-id');
+                var firstName = button.data('professor-first-name');
+                var lastName = button.data('professor-last-name');
+                var userName = button.data('professor-username');
+                var email = button.data('professor-email');
+                var title = button.data('modal-type');
+                var action = button.data('form-action');
+
+                $('#professor-id').val(id);
+                $('#professor-first-name').val(firstName);
+                $('#professor-last-name').val(lastName);
+                $('#professor-username').val(userName);
+                $('#professor-email').val(email);
+                $('#span-title').text(title);
+                $('#form-professor').attr('action',action);
+
+                if( title.indexOf('Edit') != -1) {
+                    $('#professor-username').attr('readonly', 'readonly');
+                }
+            });
+
+            $('#delete-professor-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('professor-id');
+                $('#delete-professor-id').val(id);
+            });
+
+            $('#reset-professor-password-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('professor-id');
+                $('#reset-professor-id').val(id);
+            });
+
+
+        });
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/new-professor :: professor-modal"/>
+<div th:replace="fragments/delete-professor :: delete-professor-modal"/>
+<div th:replace="fragments/reset-professor-password :: reset-professor-password-modal"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-professor-id="0"
+            data-professor-first-name=""
+            data-professor-last-name=""
+            data-professor-username=""
+            data-professor-email=""
+            data-modal-type="New"
+            th:attr="data-form-action=@{/professor/new}"
+            data-target="#professor-modal" >New Professor</button>
+
+    <div th:if="${professors}" class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+            <th scope="col">ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Username</th>
+            <th scope="col">E-Mail</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            </thead>
+            <tbody>
+            <tr scope="row" th:each="professor : ${professors}">
+                <td class="col-md-1" th:text="${professor.id}"></td>
+                <td class="col-md-2" th:text="${professor.firstName}"></td>
+                <td class="col-md-2" th:text="${professor.lastName}"></td>
+                <td class="col-md-2" th:text="${professor.user.userName}"></td>
+                <td class="col-md-2" th:text="${professor.user.email}"></td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                            th:attr="data-professor-id=${professor.id},
+                                data-professor-first-name=${professor.firstName},
+                                data-professor-last-name=${professor.lastName},
+                                data-professor-username=${professor.user.userName},
+                                data-professor-email=${professor.user.email},
+                                data-form-action=@{/professor/edit}"
+                            data-modal-type="Edit"
+                            data-target="#professor-modal">Edit</button>
+                </td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                            th:attr="data-professor-id=${professor.id}" data-target="#delete-professor-modal">Delete</button>
+                </td>
+                <td class="col-md-1">
+                    <button type="button" class="btn btn-info" data-toggle="modal"
+                            th:attr="data-professor-id=${professor.id}" data-target="#reset-professor-password-modal">Reset Password</button>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

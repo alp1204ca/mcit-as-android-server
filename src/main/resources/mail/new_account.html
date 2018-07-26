@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+<body>
+<div class="wrap" style="width: 600px;margin: auto;text-align: center;">
+    <div class="header">
+        <img src="../resources/static/images/logo_mc.jpg" th:src="${url} + '/images/logo.jpg'" alt="Admission System MCIT" style="width: 100%;"/>
+    </div>
+    
+    <div style="text-align: left;">
+
+        <p>Welcome <span th:text="${type}"></span> <span th:text="${name}"></span></p>
+
+        <p>Your new account on MCIT has been created. To login on our portal, please go to: <span th:text="${url}"></span> and enter the credentials as below:</p>
+
+        <p>
+            <strong>user name:</strong> <span th:text="${username}"></span>
+        </p>
+        <p>
+            <strong>password:</strong> <span th:text="${password}"></span>
+        </p>
+        
+    	<p>
+        Sincerely,<br/>
+        MCIT - Montreal College of Information Technology
+        </p>
+
+        <p>
+            <small>Copyright &copy; 2018-2018 MCIT - Montreal College of Information Technology</small>
+        </p>
+
+    </div>
+</div>
+</body>
+</html>

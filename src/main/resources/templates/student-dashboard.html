@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+        });
+
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h1>My Courses</h1>
+            <div>
+                <table class="table table-hover" id="cps-table">
+                    <thead>
+                        <th scope="col">Course Id</th>
+                        <th scope="col">Course Name</th>
+                        <th scope="col">Professor Name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Mark</th>
+                    </thead>
+                    <tbody>
+                        <tr scope="row" th:each="studentCourse : ${studentCourses}" class="clickable-row">
+                            <td class="col-md-1" th:text="${studentCourse.getCourse().id}"></td>
+                            <td class="col-md-2" th:text="${studentCourse.getCourse().name}"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().professor} != null" th:text="${studentCourse.getCourse().professor.firstName + ' ' + studentCourse.getCourse().professor.lastName}"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().professor} == null"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().startDate != null}" th:text="${#calendars.format(studentCourse.getCourse().startDate,'MM/dd/yyyy')}"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().startDate == null}"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().endDate != null}" th:text="${#calendars.format(studentCourse.getCourse().endDate,'MM/dd/yyyy')}"></td>
+                            <td class="col-md-2" th:if="${studentCourse.getCourse().endDate == null}"></td>
+                            <td class="col-md-1" th:if="${studentCourse.mark != null}" th:text="${studentCourse.mark}"></td>
+                            <td class="col-md-1" th:if="${studentCourse.mark == null}">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

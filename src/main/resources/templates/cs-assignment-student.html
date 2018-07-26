@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+
+            $('#delete-course-assignment-student-modal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+                var courseId = button.data('course-id');
+                var studentId = button.data('student-id');
+
+                $('#delete-course-id').val(courseId);
+                $('#delete-student-id').val(studentId);
+
+            });
+
+            $('#mark-course-assignment-student-modal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+                var courseId = button.data('course-id');
+                var studentId = button.data('student-id');
+                var mark = button.data('mark');
+
+                $('#mark-course-id').val(courseId);
+                $('#mark-student-id').val(studentId);
+                $('#mark').val(mark);
+
+            });
+        });
+
+        function addStudentToCourse(courseId, studentId) {
+            $('#add-student-course-id').val(courseId);
+            $('#add-student-student-id').val(studentId);
+            $('#form-add-student').submit();
+        }
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/course-assignment-student :: course-assignment-student-modal"/>
+<div th:replace="fragments/course-assignment-student :: delete-course-assignment-student-modal"/>
+<div th:replace="fragments/course-assignment-student :: mark-course-assignment-student-modal"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <form  method="post" id="form-course-assignment">
+
+            <div class="form-group">
+                <label for="course-assignment-course-name">Course Name</label>
+                <input type="text" class="form-control" id="course-assignment-course-name" th:value="${course.name}" readonly="readonly" />
+            </div>
+
+            <div class="form-group" sec:authorize="hasRole('ADMIN')">
+                <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#course-assignment-student-modal">Add Student</button>
+                &nbsp;<a th:href="@{'/cs-assignment/'}">Return to Course Management</a>
+            </div>
+
+            <div class="form-group" sec:authorize="hasRole('PROFESSOR')">
+                &nbsp;<a th:href="@{'/professor/dashboard'}">Return to Dashboard</a>
+            </div>
+
+            <div class="col-md-12">
+                <table class="table table-striped" id="assigned-students-table">
+                    <thead>
+                    <th scope="col">ID</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Mark</th>
+                    <th scope="col"></th>
+                    </thead>
+                    <tbody>
+                    <tr scope="row" th:each="courseStudent : ${course.courseStudents}">
+                        <td class="col-md-1" th:text="${courseStudent.getStudent().id}"></td>
+                        <td class="col-md-2" th:text="${courseStudent.getStudent().firstName}"></td>
+                        <td class="col-md-2" th:text="${courseStudent.getStudent().lastName}"></td>
+                        <td class="col-md-2" th:text="${courseStudent.getStudent().user.userName}"></td>
+                        <td class="col-md-3" th:text="${courseStudent.getStudent().user.email}"></td>
+                        <td class="col-md-1" th:if="${courseStudent.mark != null}" th:text="${courseStudent.mark}"></td>
+                        <td class="col-md-1" th:if="${courseStudent.mark == null}">-</td>
+                        <td class="col-md-1">
+                            <button sec:authorize="hasRole('ADMIN')"
+                                    type="button" class="btn btn-danger" data-toggle="modal"
+                                    th:attr="data-course-id=${course.id},
+                                             data-student-id=${courseStudent.getStudent().id}"
+                                    data-target="#delete-course-assignment-student-modal">Remove</button>
+                            <button sec:authorize="hasRole('PROFESSOR')"
+                                    type="button" class="btn btn-success" data-toggle="modal"
+                                    th:attr="data-course-id=${course.id},
+                                             data-student-id=${courseStudent.getStudent().id},
+                                             data-mark=${courseStudent.mark}"
+                                    data-target="#mark-course-assignment-student-modal">Assign Mark</button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

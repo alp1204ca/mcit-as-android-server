@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-js"/>
+
+    <script>
+        $(document).ready (function(){
+            setTimeout(function() {$('.alert').alert('close')}, 5000);
+
+            $('#course-start-date').datepicker();
+            $('#course-end-date').datepicker();
+
+            $('#course-modal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+                var id = button.data('course-id');
+                var professorId = button.data('course-professor-id');
+                var name = button.data('course-name');
+                var startDate = button.data('course-start-date');
+                var endDate = button.data('course-end-date');
+                var title = button.data('modal-type');
+                var action = button.data('form-action');
+
+                $('#course-id').val(id);
+                $('#course-name').val(name);
+
+                if (startDate != null)
+                    $('#course-start-date').datepicker('setDate', new Date(startDate));
+                if (endDate != null)
+                    $('#course-end-date').datepicker('setDate', new Date(endDate));
+
+                $('#span-title').text(title);
+                $('#form-course').attr('action',action);
+
+
+                $('select option[value="' + professorId + '"]').attr('selected', 'selected');
+
+
+            });
+
+            $('#delete-course-modal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('course-id');
+                $('#delete-course-id').val(id);
+            });
+
+            $('#course-start-date').on('changeDate', function(ev){
+                $(this).datepicker('hide');
+            });
+
+            $('#course-end-date').on('changeDate', function(ev){
+                $(this).datepicker('hide');
+            });
+        });
+
+        function getSelectedCourse() {
+
+            return $('#course-id').val();
+        }
+
+    </script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/new-course :: course-modal"/>
+<div th:replace="fragments/delete-course :: delete-course-modal"/>
+
+<div class="container">
+
+    <div th:if="${error}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <div th:if="${message}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-course-id="0"
+            data-course-name=""
+            data-modal-type="New"
+            th:attr="data-form-action=@{/course/new}"
+            data-target="#course-modal" >New Course</button>
+
+    <div th:if="${courses}" class="col-md-9">
+        <table class="table table-striped">
+            <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Professor</th>
+                <th scope="col">Actions</th>
+            </thead>
+            <tbody>
+                <tr scope="row" th:each="course : ${courses}">
+                    <td class="col-md-1" th:text="${course.id}"></td>
+                    <td class="col-md-2" th:text="${course.name}"></td>
+                    <td class="col-md-2" th:if="${course.startDate != null}" th:text="${#calendars.format(course.startDate,'MM/dd/yyyy')}"></td>
+                    <td class="col-md-2" th:if="${course.startDate == null}"></td>
+                    <td class="col-md-2" th:if="${course.endDate != null}" th:text="${#calendars.format(course.endDate,'MM/dd/yyyy')}"></td>
+                    <td class="col-md-2" th:if="${course.endDate == null}"></td>
+                    <td class="col-md-2" th:if="${course.professor != null}" th:text="${course.professor.firstName + ' '+ course.professor.lastName}"></td>
+                    <td class="col-md-2" th:if="${course.professor == null}"></td>
+                    <td class="col-md-3">
+                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                th:attr="data-course-id=${course.id},
+                                data-course-professor-id=${course.professor != null} ? ${course.professor.id},
+                                data-course-name=${course.name},
+                                data-course-start-date=${course.startDate.getTime()},
+                                data-course-end-date=${course.endDate.getTime()},
+                                data-form-action=@{/course/edit}"
+                                data-modal-type="Edit"
+                                data-target="#course-modal">Edit</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                th:attr="data-course-id=${course.id}" data-target="#delete-course-modal">Delete</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
